@@ -12,7 +12,7 @@ async function validerChoixParSemestre(choixS1, choixS2) {
     return { valide: false, message: "Les choix doivent être des tableaux." };
   }
 
-  // ✅ Correction ici : minimum 3 modules
+  // minimum 3
   if (choixS1.length < 3 || choixS2.length < 3) {
     return {
       valide: false,
@@ -72,41 +72,41 @@ exports.soumettreFicheVoeux = async (req, res) => {
       commentaire = ''
     } = req.body;
 
-    // 🔰 0. Presence check
+    // Presence check
     if (choixS1 === undefined || choixS2 === undefined) {
       return res.status(400).json({
         message: "Les champs `choixS1` et `choixS2` sont obligatoires."
       });
     }
 
-    // 🔰 1. Valider les choix avant tout
+    
     const { valide, message } = await validerChoixParSemestre(choixS1, choixS2);
     if (!valide) {
       return res.status(400).json({ message });  // **NE PAS OUBLIER** le return !
     }
 
-    // 🔰 2. Vérifier PFE min
+    //Vérifier PFE min
     if (nb_pfe_licence < 1 || nb_pfe_master < 1) {
       return res.status(400).json({
         message: "Le nombre de PFE Licence et Master doit être ≥ 1."
       });
     }
 
-    // 🔍 3. Calcul année
+    
     const today = new Date();
     const annee = today.getMonth() >= 6 ? today.getFullYear() : today.getFullYear() - 1;
 
-    // 🔒 4. Empêcher doublon
+    // une seule fiche pas de doublon 
     const exist = await Voeu.findOne({
       where: { utilisateur_id: utilisateurId, annee }
     });
     if (exist) {
       return res.status(400).json({
-        message: `⚠️ Fiche de l’année ${annee} déjà soumise.`
+        message: ` Fiche de l’année ${annee} déjà soumise.`
       });
     }
 
-    // 🧾 5. Création de la fiche
+    // creation de la fiche
     const voeu = await Voeu.create({
       utilisateur_id: utilisateurId,
       nb_pfe_licence,
@@ -117,7 +117,7 @@ exports.soumettreFicheVoeux = async (req, res) => {
       date_soumission: today
     });
 
-    // 📦 6. Préparation et bulk insert
+    // bulk insert
     const voeuxModules = [];
     for (const sem of [choixS1, choixS2]) {
       for (const { moduleId, type_enseignement } of sem) {
@@ -133,7 +133,7 @@ exports.soumettreFicheVoeux = async (req, res) => {
     }
     await ModuleVoeu.bulkCreate(voeuxModules);
 
-    // ✅ Succès
+    // Succès
     return res.status(201).json({
       message: `🎉 Fiche ${annee} créée (ID=${voeu.id}).`
     });
@@ -170,7 +170,7 @@ exports.recupererDerniersVoeux = async (req, res) => {
       });
     }
     
-    // Organiser les modules par semestre pour une meilleure lisibilité
+    // Organiser les modules par semestre 
     const moduleS1 = [];
     const moduleS2 = [];
     
@@ -306,7 +306,7 @@ exports.modifierFicheVoeux = async (req, res) => {
       voeuId: updatedVoeu.id
     });
   } catch (error) {
-    console.error("❌ Erreur lors de la mise à jour :", error);
+    console.error(" Erreur lors de la mise à jour :", error);
     res.status(500).json({
       message: "Une erreur est survenue lors de la mise à jour de la fiche de vœux."
     });
