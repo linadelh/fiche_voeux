@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récapitulatif des choix</title>
+    <style>
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: #f0f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Calibri', Arial, sans-serif;
+        }
+
+        
+        .container {
+            width: 90%;
+            height: 90vh;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+       
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1a5276;
+            padding-bottom: 15px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #004056;
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        
+        .notification-bell {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .bell-icon {
+            width: 40px;
+            height: 40px;
+            transition: transform 0.3s ease;
+        }
+
+        .bell-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+       
+        @keyframes ring {
+            0% { transform: rotate(0); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0); }
+        }
+
+        .bell-shake {
+            animation: ring 0.5s ease-in-out;
+        }
+
+        
+        .notifications-panel {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            width: 300px;
+            z-index: 100;
+            display: none;
+        }
+
+        .notifications-panel h2 {
+            color: #004056;
+            font-size: 18px;
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        
+        .notification {
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .notification:hover {
+            background-color: #f5f5f5;
+        }
+
+        .notification:last-child {
+            border-bottom: none;
+        }
+
+        .notification.unread::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .notification span {
+            font-size: 14px;
+            color: #333;
+        }
+
+        
+        .mark-read-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .mark-read-btn:hover {
+            background-color: #0056b3;
+        }
+
+        
+        .info-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        
+        .message-box {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            background-color: rgba(255, 182, 193, 0.5);
+            border: 2px solid #8b0000;
+            padding: 15px;
+            margin: 0 auto 30px;
+            width: 80%;
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(139, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(139, 0, 0, 0); }
+        }
+
+       
+        .centered-title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #004056;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .centered-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 3px;
+            background-color: #1a5276;
+            border-radius: 2px;
+        }
+
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: #ffffff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        
+        th {
+            background-color: #1a5276;
+            color: white;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #1a5276;
+            position: relative;
+        }
+
+        th:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.3);
+        }
+
+      
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #d4e6f1;
+            transform: scale(1.01);
+        }
+
+        
+        .stats-cards {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            width: 23%;
+            min-width: 200px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-title {
+            color: #1a5276;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #004056;
+        }
+
+        
+        .divider {
+            height: 3px;
+            background: linear-gradient(to right, #1a5276, #d4e6f1, #1a5276);
+            margin: 30px 0;
+            border-radius: 2px;
+        }
+
+        
+        .footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 15px 0;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+        }
+
+      
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #d4e6f1;
+            color: #1a5276;
+            border-radius: 15px;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        .badges-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+       
+        .help-section {
+            background-color: #f5f9fc;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #1a5276;
+        }
+
+        .help-title {
+            color: #004056;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .help-text {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        
+        .semester-selector {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .semester-btn {
+            background-color: #f5f9fc;
+            color: #1a5276;
+            border: 2px solid #1a5276;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .semester-btn:hover {
+            background-color: #d4e6f1;
+        }
+
+        .semester-btn.active {
+            background-color: #1a5276;
+            color: white;
+        }
+
+        .semester-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .semester-content.active {
+            display: block;
+        }
+
+        
+        .animated-title {
+            animation: fadeIn 1.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="notif-sound" src="notif.mp3"></audio>
+
+    <div class="container">
+        
+        <header class="header">
+            <h1 id="page-title" class="animated-title">Récapitulatif des choix</h1>
+            <div class="notification-bell" onclick="toggleNotificationsPanel()">
+                <img src="notifcloche.jpg" alt="Cloche de notification" class="bell-icon">
+                <div class="notification-badge" id="notification-badge">!</div>
+            </div>
+        </header>
+
+        <section class="info-section">
+            
+            <div class="message-box">
+                VOUS AVEZ DÉJÀ FAIT VOTRE CHOIX !
+            </div>
+            
+            
+            <div class="info-header centered-title">Tableau Récapitulatif</div>
+            
+            
+            <div class="badges-container">
+                <span class="badge">Année 2024-2025</span>
+                <span class="badge">Mise à jour: 30/04/2025</span>
+                <span class="badge">Validé</span>
+            </div>
+            
+            
+            <div class="semester-selector">
+                <button class="semester-btn active" onclick="showSemester('semester1')">Semestre 1</button>
+                <button class="semester-btn" onclick="showSemester('semester2')">Semestre 2</button>
+            </div>
+            
+            
+            <div id="semester1" class="semester-content active">
+                <div class="info-content">
+                    <table id="recap-table-s1">
+                        <thead>
+                            <tr>
+                                <th>Modules</th>
+                                <th>Types d'enseignement</th>
+                                <th>Heures d'enseignement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            
+            <div id="semester2" class="semester-content">
+                <div class="info-content">
+                    <table id="recap-table-s2">
+                        <thead>
+                            <tr>
+                                <th>Modules</th>
+                                <th>Types d'enseignement</th>
+                                <th>Heures d'enseignement</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+           
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-title">Total d'heures</div>
+                    <div class="stat-value" id="total-hours">74h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Modules validés</div>
+                    <div class="stat-value" id="modules-validated">4/4</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Progression</div>
+                    <div class="stat-value">100%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Date limite</div>
+                    <div class="stat-value">15/05/25</div>
+                </div>
+            </div>
+            
+            
+            <div class="divider"></div>
+            
+           
+            <div class="help-section">
+                <div class="help-title">Besoin d'aide ?</div>
+                <div class="help-text">
+                    Si vous souhaitez modifier votre choix, veuillez contacter le responsable pédagogique 
+                    par email à <strong>finfo@usthb.dz</strong> ou par téléphone au <strong>+213 023934031</strong>.
+                    Les modifications sont possibles jusqu'au 15 mai 2025.
+                </div>
+            </div>
+        </section>
+
+        
+        <div class="notifications-panel" id="notifications-panel">
+            <h2>Vos Notifications</h2>
+            <div id="notifications-container">
+                
+            </div>
+        </div>
+
+        
+        <footer class="footer">
+            © Faculté d'Informatique - Tous droits réservés
+        </footer>
+
+    </div>
+
+    <script>
+        
+        let notifications = [];
+        let unreadCount = 0;
+        const currentUserId = 1; 
+    
+       
+        async function fetchNotifications() {
+            try {
+                const response = await fetch(`/notifications/utilisateur/${currentUserId}`);
+                if (!response.ok) throw new Error('Erreur réseau');
+                
+                notifications = await response.json();
+                unreadCount = notifications.filter(n => n.statut === "non lue").length;
+                updateBadge();
+                renderNotifications();
+            } catch (error) {
+                console.error("Erreur lors de la récupération des notifications:", error);
+            }
+        }
+    
+       
+        async function markAsRead(id) {
+            try {
+                const response = await fetch(`/notifications/marquer-lue/${id}`, {
+                    method: 'PATCH'
+                });
+                
+                if (!response.ok) throw new Error('Erreur réseau');
+                
+                
+                const notif = notifications.find(n => n.id === id);
+                if (notif && notif.statut === "non lue") {
+                    notif.statut = "lue";
+                    unreadCount = notifications.filter(n => n.statut === "non lue").length;
+                    updateBadge();
+                    renderNotifications();
+                }
+            } catch (error) {
+                console.error("Erreur lors du marquage comme lue:", error);
+            }
+        }
+    
+        
+        async function addNewNotification(message) {
+            try {
+                const response = await fetch('/notifications/creer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        utilisateurId: currentUserId,
+                        message: message
+                    })
+                });
+                
+                if (!response.ok) throw new Error('Erreur réseau');
+                
+                
+                await fetchNotifications();
+                playNotificationSound();
+                
+                
+                const bell = document.querySelector(".bell-icon");
+                bell.classList.add("bell-shake");
+                setTimeout(() => bell.classList.remove("bell-shake"), 600);
+            } catch (error) {
+                console.error("Erreur lors de l'ajout de notification:", error);
+            }
+        }
+    
+        
+        async function fetchModuleData() {
+            try {
+                
+                const response = await fetch(`/modules/utilisateur/${currentUserId}`);
+                if (!response.ok) throw new Error('Erreur réseau');
+                
+                const data = await response.json();
+                renderRecapTables(data);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des modules:", error);
+                
+                
+                const defaultData = {
+                    semester1: [
+                        { module: "Module 1", type: "Cours Magistral", heures: "24h" },
+                        { module: "Module 2", type: "TD", heures: "12h" },
+                        { module: "Module 3", type: "TP", heures: "18h" },
+                        { module: "Module 4", type: "Cours Magistral", heures: "20h" }
+                    ],
+                    semester2: [
+                        { module: "Module 5", type: "Cours Magistral", heures: "22h" },
+                        { module: "Module 6", type: "TD", heures: "16h" },
+                        { module: "Module 7", type: "TP", heures: "20h" },
+                        { module: "Module 8", type: "Projet", heures: "24h" }
+                    ]
+                };
+                renderRecapTables(defaultData);
+            }
+        }
+    
+       
+        function renderRecapTables(data) {
+           
+            const tableBodyS1 = document.querySelector("#recap-table-s1 tbody");
+            tableBodyS1.innerHTML = "";
+            
+            data.semester1.forEach(row => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.module}</td>
+                    <td>${row.type}</td>
+                    <td>${row.heures}</td>
+                `;
+                tableBodyS1.appendChild(tr);
+            });
+            
+            
+            const tableBodyS2 = document.querySelector("#recap-table-s2 tbody");
+            tableBodyS2.innerHTML = "";
+            
+            data.semester2.forEach(row => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.module}</td>
+                    <td>${row.type}</td>
+                    <td>${row.heures}</td>
+                `;
+                tableBodyS2.appendChild(tr);
+            });
+            
+           
+            updateStats(data);
+        }
+    
+        
+        function updateStats(data) {
+            
+            const totalHoursS1 = data.semester1.reduce((sum, module) => {
+                return sum + parseInt(module.heures);
+            }, 0);
+            
+            const totalHoursS2 = data.semester2.reduce((sum, module) => {
+                return sum + parseInt(module.heures);
+            }, 0);
+            
+            
+            document.getElementById('total-hours').textContent = `${totalHoursS1}h`;
+            document.getElementById('modules-validated').textContent = `${data.semester1.length}/${data.semester1.length}`;
+        }
+    
+        
+        function showSemester(semesterId) {
+            
+            const semesterContents = document.querySelectorAll('.semester-content');
+            semesterContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            
+            document.getElementById(semesterId).classList.add('active');
+            
+           
+            const buttons = document.querySelectorAll('.semester-btn');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+           
+            event.currentTarget.classList.add('active');
+            
+           
+            if (semesterId === 'semester1') {
+                document.getElementById('total-hours').textContent = '74h';
+            } else {
+                document.getElementById('total-hours').textContent = '82h';
+            }
+        }
+    
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchNotifications();
+            fetchModuleData();
+    
+            
+        });
+    </script>
+</body>
+</html>
